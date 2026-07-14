@@ -13,6 +13,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 Base.metadata.create_all(bind=engine)
 
+@app.get("/")
+def root():
+    return {"status": "ok"}
 
 @app.post("/signup")
 def signup(user: CreateUser):
