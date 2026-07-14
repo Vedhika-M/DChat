@@ -1,10 +1,14 @@
-venv/
 
 __pycache__/
 *.py[cod]
-
 .vscode/
-
 chat.db
-
 .env
+
+.idea/
+.gradle/
+build/
+**/build/
+local.properties
+
+*.iml

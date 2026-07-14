@@ -1,7 +1,7 @@
-from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect, Query#gives meaning to post,get etc methods
-from database import engine,SessionLocal#connects to database to store or retrieve data from it#it lets us open,edit,save,close a database
-from models import User,Base,Message#imports the orm model user(one row of the users table)#keeps track of all tables created
-from schemas import CreateUser,UpdateUser,UserResponse,LoginUser,MessageResponse,CreateMessage#imports the pydantic model
+from fastapi import FastAPI, HTTPException, Depends, WebSocket, WebSocketDisconnect, Query
+from database import engine,SessionLocal
+from models import User,Base,Message
+from schemas import CreateUser,UpdateUser,UserResponse,LoginUser,MessageResponse,CreateMessage
 from auth import hash_password,verify_password
 from jwt_handler import create_access_token,verify_access_token
 from fastapi.security import OAuth2PasswordBearer,OAuth2PasswordRequestForm
@@ -11,7 +11,7 @@ from connection_manager import manager
 app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-Base.metadata.create_all(bind=engine)#nothing much if table already exists, otherwise it creates one. The syntax is mostly fixed except for the engine name(here engine)
+Base.metadata.create_all(bind=engine)
 
 
 @app.post("/signup")
@@ -19,13 +19,11 @@ def signup(user: CreateUser):
     db = SessionLocal()
 
     existing_username = db.query(User).filter(User.username == user.username).first()
-
     if existing_username:
         db.close()
         raise HTTPException(status_code=400, detail="Username already exists")
 
     existing_email = db.query(User).filter(User.email == user.email).first()
-
     if existing_email:
         db.close()
         raise HTTPException(status_code=400, detail="Email already exists")
