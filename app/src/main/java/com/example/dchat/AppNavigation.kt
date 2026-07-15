@@ -1,7 +1,6 @@
 package com.example.dchat
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -33,9 +32,7 @@ fun AppNavigation(){
         }
 
         composable("chatscreen") {
-            ChatScreen(
-                navController = navController
-            )
+            ChatScreen()
         }
     }
 }

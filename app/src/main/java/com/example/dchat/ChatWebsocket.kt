@@ -23,7 +23,7 @@ class ChatWebsocket {
         onMessage: (UserMessageResponse) -> Unit
     ) {
         _connectionState.value = ConnectionStatus.CONNECTING
-        val request = Request.Builder().url("ws://10.0.2.2:8000/ws?token=$token").build()
+        val request = Request.Builder().url("wss://dchat-production-89ff.up.railway.app/ws?token=$token").build()
         webSocket = client.newWebSocket(
             request,
             object : WebSocketListener() {

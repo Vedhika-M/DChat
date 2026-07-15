@@ -1,9 +1,9 @@
 package com.example.dchat
 
 import retrofit2.HttpException
-import android.os.Build
-import androidx.annotation.RequiresExtension
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -37,14 +39,22 @@ fun LoginScreen(
     var passcode by remember {
         mutableStateOf("")
     }
-    var email by remember{
-        mutableStateOf("")
-    }
 
     val scope= rememberCoroutineScope()
 
     var errorMessage by remember {
         mutableStateOf("")
+    }
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ){
+        Image(
+            painter = painterResource(id = R.drawable.raindrop_bg),
+            contentDescription = "rain drop background",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
     }
 
     Column(
@@ -74,19 +84,6 @@ fun LoginScreen(
         Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
 
         TextField(
-            value = email,
-            onValueChange = {
-                email=it
-            },
-            label = {
-                Text("Mail ID")
-            },
-            singleLine = true
-        )
-
-        Spacer(modifier = Modifier.fillMaxWidth().height(10.dp))
-
-        TextField(
             value = passcode,
             onValueChange = {
                 passcode=it
@@ -96,6 +93,8 @@ fun LoginScreen(
             },
             singleLine = true
         )
+
+        Spacer(modifier = Modifier.height(30.dp))
 
         Button(
             onClick = {
@@ -108,24 +107,15 @@ fun LoginScreen(
                             )
                             SessionManager.jwtToken=response.access_token
                             navController.navigate("homescreen")
-                        }catch (e: HttpException) {
-                            println("HTTP ${e.code()}")
-
-                            val errorBody = e.response()?.errorBody()?.string()
-                            println(errorBody)
-
-                            errorMessage = "HTTP ${e.code()}"
-                        }
-                        catch (e: Exception) {
-                            e.printStackTrace()
-                            errorMessage = e.message ?: "Unknown error"
-                        }/*catch (e: HttpException) {
-                            if (e.code() == 401) {
-                                errorMessage="Invalid username or password"
-                            }else{
-                                errorMessage="Oops! Something went wrong"
+                        } catch (e: HttpException) {
+                            errorMessage = when (e.code()) {
+                                400 -> "Invalid username or password."
+                                401 -> "Invalid username or password."
+                                404 -> "User not found."
+                                500 -> "Server error. Please try again."
+                                else -> "Oops! Something went wrong..."
                             }
-                        }*/
+                        }
                     }
                 }
             }
