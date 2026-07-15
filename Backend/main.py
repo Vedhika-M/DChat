@@ -15,6 +15,7 @@ Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def root():
+    print("=== ROOT HIT ===", flush=True)
     return {"status": "ok"}
 
 @app.post("/signup")
